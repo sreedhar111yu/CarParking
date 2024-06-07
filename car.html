@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Car Parking Management</title>
+  <style>
+    .parking-spot {
+      margin: 20px;
+      padding: 20px;
+      border: 1px solid black;
+      width: 100px;
+      text-align: center;
+    }
+    .occupied {
+      background-color: red;
+      color: white;
+    }
+    .free {
+      background-color: green;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <h1>Car Parking Management</h1>
+  <div id="spot1" class="parking-spot">Spot 1</div>
+  <div id="spot2" class="parking-spot">Spot 2</div>
+  <div id="spot3" class="parking-spot">Spot 3</div>
+  <div id="spot4" class="parking-spot">Spot 4</div>
+
+  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-database.js"></script>
+  <script>
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+      apiKey: "your_api_key",
+      authDomain: "your_project_id.firebaseapp.com",
+      databaseURL: "https://your_project_id.firebaseio.com",
+      projectId: "your_project_id",
+      storageBucket: "your_project_id.appspot.com",
+      messagingSenderId: "your_messaging_sender_id",
+      appId: "your_app_id"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    var database = firebase.database();
+
+    function updateSpotStatus(spot, status) {
+      var spotElement = document.getElementById(spot);
+      if (status === 1) {
+        spotElement.classList.add('occupied');
+        spotElement.classList.remove('free');
+        spotElement.textContent = spot + " - Occupied";
+      } else {
+        spotElement.classList.add('free');
+        spotElement.classList.remove('occupied');
+        spotElement.textContent = spot + " - Free";
+      }
+    }
+
+    database.ref('/parking').on('value', function(snapshot) {
+      var data = snapshot.val();
+      updateSpotStatus('spot1', data.spot1);
+      updateSpotStatus('spot2', data.spot2);
+      updateSpotStatus('spot3', data.spot3);
+      updateSpotStatus('spot4', data.spot4);
+    });
+  </script>
+</body>
+</html>
